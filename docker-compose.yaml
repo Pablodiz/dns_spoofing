@@ -1,0 +1,45 @@
+services:
+  # Servicio del gateway
+  gateway:
+    build:
+      context: ./gateway  # Directorio donde está el Dockerfile del gateway
+      dockerfile: Dockerfile
+    container_name: gateway
+    tty: true # Mantener una tty abierta para el contenedor
+    cap_add: 
+      - NET_ADMIN # Permitir que el contenedor cambie la configuración de red
+    networks:
+      our_network:
+        ipv4_address: 172.21.0.2
+    privileged: true  # Necesario para tener acceso completo a la red
+
+  # Servicio del cliente
+  cliente:
+    build:
+      context: ./cliente  
+      dockerfile: Dockerfile
+    container_name: cliente
+    cap_add:
+      - NET_ADMIN  
+    networks:
+      our_network:
+        ipv4_address: 172.21.0.100
+
+  # Servicio del atacante
+  atacante:
+    build:
+      context: ./atacante 
+      dockerfile: Dockerfile
+    container_name: atacante
+    cap_add:
+      - NET_ADMIN  
+    networks:
+      our_network:
+        ipv4_address: 172.21.0.101
+
+networks:
+  our_network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.21.0.0/24  # Subred para la red personalizada

